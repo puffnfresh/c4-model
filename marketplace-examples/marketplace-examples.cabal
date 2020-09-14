@@ -1,0 +1,37 @@
+name: marketplace-examples
+version: 0
+build-type: Simple
+cabal-version: >= 1.8
+
+library
+  exposed-modules:     Marketplace.API
+                     , Marketplace.Diagram
+                     , Marketplace.Model
+                     , Marketplace.Web
+  hs-source-dirs:      src
+  build-depends:       base
+
+                     , aeson
+                     , containers
+                     , dataflow
+                     , free
+                     , mtl
+                     , scotty
+                     , text
+
+executable marketplace-examples
+  main-is:             Main.hs
+  hs-source-dirs:      app
+  build-depends:       base
+                     , marketplace-examples
+
+                     , aeson
+                     , containers
+                     , dataflow
+                     , free
+                     , http-types
+                     , mtl
+                     , scotty
+                     , semigroupoids
+                     , text
+                     , wai
