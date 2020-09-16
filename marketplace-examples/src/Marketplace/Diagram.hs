@@ -47,9 +47,6 @@ makeDiagram t rs =
     flows =
       (\(Relation a b c) -> Flow a c (singleton "operation" (String b))) <$> rs
 
-writeDiagram :: String -> Free API a -> IO ()
-writeDiagram title =
-  writeFile fp . renderPlantUML . asSequenceDiagram . makeDiagram title . execWriter . foldFree relation
-  where
-    fp =
-      map (\a -> if isAlphaNum a then toLower a else '-') title <> ".puml"
+renderDiagram :: String -> Free API a -> String
+renderDiagram title =
+  renderPlantUML . asSequenceDiagram . makeDiagram title . execWriter . foldFree relation

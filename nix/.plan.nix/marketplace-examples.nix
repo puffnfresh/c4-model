@@ -27,10 +27,13 @@
       "library" = {
         depends = [
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
-          (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+          (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+          (hsPkgs."dataflow" or (errorHandler.buildDepError "dataflow"))
           (hsPkgs."free" or (errorHandler.buildDepError "free"))
-          (hsPkgs."wai" or (errorHandler.buildDepError "wai"))
+          (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
+          (hsPkgs."scotty" or (errorHandler.buildDepError "scotty"))
+          (hsPkgs."text" or (errorHandler.buildDepError "text"))
           ];
         buildable = true;
         };
@@ -39,16 +42,26 @@
           depends = [
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."marketplace-examples" or (errorHandler.buildDepError "marketplace-examples"))
-            (hsPkgs."free" or (errorHandler.buildDepError "free"))
-            (hsPkgs."wai" or (errorHandler.buildDepError "wai"))
-            (hsPkgs."text" or (errorHandler.buildDepError "text"))
-            (hsPkgs."dataflow" or (errorHandler.buildDepError "dataflow"))
-            (hsPkgs."semigroupoids" or (errorHandler.buildDepError "semigroupoids"))
-            (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
-            (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
-            (hsPkgs."scotty" or (errorHandler.buildDepError "scotty"))
+            (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."dataflow" or (errorHandler.buildDepError "dataflow"))
+            (hsPkgs."free" or (errorHandler.buildDepError "free"))
             (hsPkgs."http-types" or (errorHandler.buildDepError "http-types"))
+            (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
+            (hsPkgs."scotty" or (errorHandler.buildDepError "scotty"))
+            (hsPkgs."semigroupoids" or (errorHandler.buildDepError "semigroupoids"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
+            (hsPkgs."wai" or (errorHandler.buildDepError "wai"))
+            ];
+          buildable = true;
+          };
+        };
+      tests = {
+        "test" = {
+          depends = [
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."tasty" or (errorHandler.buildDepError "tasty"))
+            (hsPkgs."tasty-golden" or (errorHandler.buildDepError "tasty-golden"))
             ];
           buildable = true;
           };

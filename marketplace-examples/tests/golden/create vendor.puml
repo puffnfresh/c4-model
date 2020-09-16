@@ -1,0 +1,36 @@
+@startuml
+skinparam BackgroundColor #white
+skinparam Shadowing false
+skinparam SequenceMessageAlign center
+skinparam DefaultFontName Arial
+skinparam DefaultFontStyle bold
+skinparam DefaultFontColor #333333
+skinparam NoteBackgroundColor #fbfb77
+skinparam NoteBorderColor #cbcb47
+skinparam NoteBackgroundColor #ffffcd
+skinparam NoteBorderColor #a9a980
+skinparam NoteFontColor #676735
+skinparam NoteFontStyle italic
+skinparam SequenceArrowColor #555555
+skinparam SequenceArrowFontColor #555555
+skinparam SequenceArrowFontStyle none
+skinparam SequenceBoxBackgroundColor #fafafa
+skinparam SequenceBoxBorderColor #eeeeee
+skinparam SequenceBoxFontColor #666666
+skinparam SequenceBoxFontSize 12
+skinparam SequenceBoxFontStyle italic
+skinparam ParticipantBackgroundColor #dde5ff
+skinparam ParticipantBorderColor #cccccc
+skinparam ParticipantFontColor #333333
+skinparam ParticipantFontStyle bold
+skinparam DatabaseBackgroundColor #df4646
+skinparam DatabaseFontColor #red
+skinparam DatabaseFontStyle bold
+skinparam EntityBackgroundColor #999999
+skinparam SequenceLifeLineBorderColor #bbbbbb
+box "create vendor"
+  participant "Marketplace" as Marketplace
+  participant "Database" as Database
+end box
+Marketplace -> Database : <b>creates a vendor</b>
+@enduml

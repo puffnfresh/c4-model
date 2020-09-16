@@ -21,7 +21,6 @@ import Marketplace.API
     jsonData,
     jsonResponse,
   )
-import Marketplace.Diagram (writeDiagram)
 import Marketplace.Model
   ( App (App),
     Id (Id),
@@ -59,13 +58,6 @@ post :: String -> Free API () -> Program
 post r p =
   tell (singleton (POST, r) p)
 
-generateSequenceDiagrams :: Program -> IO ()
-generateSequenceDiagrams w =
-  traverse_ (uncurry f) (toList (execWriter w))
-  where
-    f (m, r) =
-      writeDiagram (show m <> " " <> r)
-
 -- Example
 
 program :: Program
@@ -77,6 +69,5 @@ program =
     jsonResponse a
 
 main :: IO ()
-main = do
-  generateSequenceDiagrams program
+main =
   serve program

@@ -35,3 +35,15 @@ executable marketplace-examples
                      , semigroupoids
                      , text
                      , wai
+
+test-suite test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      tests
+  main-is:             Main.hs
+  build-depends:       base
+                     , marketplace-examples
+                     , bytestring
+                     , filepath
+                     , free
+                     , tasty
+                     , tasty-golden
