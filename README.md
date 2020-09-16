@@ -12,4 +12,4 @@ diagrams:
 The marketplace-examples project is an example of generating sequence
 diagrams from code:
 
-![](create vendor and app.png)
+![](create&#32;vendor&#32;and&#32;app.png)
