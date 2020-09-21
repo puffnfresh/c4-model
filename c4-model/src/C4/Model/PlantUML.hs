@@ -1,54 +1,96 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module C4.Model.PlantUML (
-  plantUML
-, plantUML'
-) where
+module C4.Model.PlantUML
+  ( containerContextDiagram,
+    containerContextDiagram',
+    systemContextDiagram,
+    systemContextDiagram',
+  )
+where
 
-import C4.Model (Model(..), Relationship(..), SoftwareSystem, relationships)
+import C4.Model (Container (..), HasRelationships, Key, Model (..), Relationship (..), Technology, containers, relationships)
+import Control.Lens (FoldableWithIndex, folded, ifoldMap, (^.))
 import Data.Map (Map)
-import Control.Lens ((^.), ifoldMap)
 import Data.String (IsString)
 
-actor :: (IsString x, Semigroup x) => x -> [x]
-actor p =
-  [ "actor \"" <> p <> "\" <<Person>>"
-  ]
+rel :: (IsString x, Semigroup x) => x -> x -> x -> x
+rel a b c =
+  "Rel(" <> a <> ", " <> b <> ", \"" <> c <> "\")"
 
-rectangle :: (IsString x, Semigroup x) => x -> [x]
-rectangle s =
-  [ "rectangle " <> s <> " <<Software System>> ["
-  , "  " <> s
-  , "]"
-  ]
-
-relations :: (IsString x, Semigroup x) => (s -> x) -> (t -> x) -> s -> SoftwareSystem s c t o -> [x]
+relations :: (IsString a, Semigroup a, HasRelationships s) => (Key s -> a) -> (Technology s -> a) -> Key s -> s -> [a]
 relations sx tx s ss =
-  ifoldMap (\s' (Relationship _ t) -> [ sx s <> " ..> " <> sx s' <> " : <<" <> tx t <> ">>" ]) (ss ^. relationships)
+  ifoldMap (\s' (Relationship _ t) -> [rel (sx s) (sx s') (tx t)]) (ss ^. relationships)
+
+person :: (IsString x, Semigroup x) => x -> x
+person p =
+  "Person(" <> p <> ", \"" <> p <> "\")"
+
+container :: (IsString x, Semigroup x) => (c -> x) -> (t -> x) -> c -> Container c t cm -> x
+container cx tx c (Container t _ _) =
+  "Container(" <> cx c <> ", \"" <> cx c <> "\", \"" <> tx t <> "\")"
+
+system :: (IsString x, Semigroup x) => (s -> x) -> s -> x
+system sx s =
+  "System(" <> sx s <> ", \"" <> sx s <> "\")"
 
 interactions :: (IsString x, Semigroup x) => (p -> x) -> (i -> x) -> (s -> x) -> p -> Map s i -> [x]
 interactions px ix sx p =
-  ifoldMap (\s i -> [ px p <> " ..> " <> sx s <> " : " <> ix i ])
+  ifoldMap (\s i -> [rel (px p) (sx s) (ix i)])
 
-plantUML ::
-  (IsString x, Semigroup x) =>
-  (p -> x)
-  -> (i -> x)
-  -> (s -> x)
-  -> (t -> x)
-  -> Model p i s c t o
-  -> [x]
-plantUML px ix sx tx (Model ps ss) =
-     ["@startuml"]
-  <> ifoldMap (const . actor . px) ps
-  <> ifoldMap (const . rectangle . sx) ss
-  <> ifoldMap (relations sx tx) ss
-  <> ifoldMap (interactions px ix sx) ps
-  <> ["@enduml"]
+ifoldToList :: FoldableWithIndex a1 f => (a1 -> a2) -> f b -> [a2]
+ifoldToList f =
+  ifoldMap (const . (: []) . f)
 
-plantUML' ::
-  (Show p, Show i, Show s, Show t) =>
-  Model p i s c t o
-  -> String
-plantUML' =
-  unlines . plantUML show show show show
+wrapDiagram ::
+  IsString a =>
+  [a] ->
+  [a]
+wrapDiagram x =
+  [ "@startuml",
+    "!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml",
+    "LAYOUT_WITH_LEGEND()"
+  ]
+    <> x
+    <> ["@enduml"]
+
+containerContextDiagram ::
+  (IsString x, Semigroup x, Ord c) =>
+  (c -> x) ->
+  (t -> x) ->
+  Model p i s c t o ->
+  [x]
+containerContextDiagram cx tx (Model _ ss) =
+  wrapDiagram
+    ( ifoldMap (\a b -> [container cx tx a b]) (ss ^. folded . containers)
+        <> ifoldMap (relations cx tx) (ss ^. folded . containers)
+    )
+
+containerContextDiagram' ::
+  (Show p, Show i, Show s, Show c, Ord c, Show t) =>
+  Model p i s c t o ->
+  String
+containerContextDiagram' =
+  unlines . containerContextDiagram show show
+
+systemContextDiagram ::
+  (IsString x, Semigroup x, Ord c) =>
+  (p -> x) ->
+  (i -> x) ->
+  (s -> x) ->
+  (t -> x) ->
+  Model p i s c t o ->
+  [x]
+systemContextDiagram px ix sx tx (Model ps ss) =
+  wrapDiagram
+    ( ifoldToList (person . px) ps
+        <> ifoldToList (system sx) ss
+        <> ifoldMap (relations sx tx) ss
+        <> ifoldMap (interactions px ix sx) ps
+    )
+
+systemContextDiagram' ::
+  (Show p, Show i, Show s, Show c, Ord c, Show t) =>
+  Model p i s c t o ->
+  String
+systemContextDiagram' =
+  unlines . systemContextDiagram show show show show

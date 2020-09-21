@@ -3,7 +3,7 @@
 module Main where
 
 import C4.Model
-import C4.Model.PlantUML (plantUML')
+import C4.Model.PlantUML (containerContextDiagram', systemContextDiagram')
 import Control.Lens hiding (Identity)
 
 data MarketplacePerson
@@ -31,9 +31,10 @@ data MarketplaceTechnology
   | Docker
   | HAProxy
   | Varnish
-
   | REST
   | SQL
+  | HTTP
+  | SQS
   deriving (Eq, Ord, Show)
 
 data MarketplaceComponent
@@ -49,21 +50,45 @@ data MarketplaceInteraction
 
 athreos ::
   Container
+    MarketplaceContainer
     MarketplaceTechnology
     MarketplaceComponent
 athreos =
   container Docker
     & components . at ReverseProxy ?~ Component HAProxy
     & components . at Cache ?~ Component Varnish
+    & relationships . at AMKT ?~ relationship HTTP
+    & relationships . at Padres ?~ relationship HTTP
+    & relationships . at Hiberico ?~ relationship HTTP
 
 amkt ::
   Container
+    MarketplaceContainer
     MarketplaceTechnology
     MarketplaceComponent
 amkt =
   container Scala
     & components . at WebApp ?~ Component Scala
     & components . at Analytics ?~ Component Scala
+    & relationships . at Postaldistrix ?~ relationship SQS
+
+hub ::
+  Container
+    MarketplaceContainer
+    MarketplaceTechnology
+    MarketplaceComponent
+hub =
+  container Scala
+    & relationships . at AMKT ?~ relationship HTTP
+
+padres ::
+  Container
+    MarketplaceContainer
+    MarketplaceTechnology
+    MarketplaceComponent
+padres =
+  container Scala
+    & relationships . at AMKT ?~ relationship HTTP
 
 marketplaceSystem ::
   SoftwareSystem
@@ -75,13 +100,13 @@ marketplaceSystem =
   softwareSystem
     & containers . at AMKT ?~ amkt
     & containers . at Athreos ?~ athreos
-    & containers . at Hub ?~ container Scala
-    & containers . at Padres ?~ container Scala
+    & containers . at Hub ?~ hub
+    & containers . at Padres ?~ padres
     & containers . at Hiberico ?~ container Haskell
     & containers . at Postaldistrix ?~ container Scala
     & relationships . at Identity ?~ relationship REST
     & relationships . at PAKO ?~ relationship SQL
- 
+
 marketplace ::
   Model
     MarketplacePerson
@@ -99,4 +124,4 @@ marketplace =
 
 main :: IO ()
 main =
-  putStrLn (plantUML' marketplace)
+  putStrLn (containerContextDiagram' marketplace)
