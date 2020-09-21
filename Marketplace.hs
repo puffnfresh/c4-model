@@ -123,5 +123,6 @@ marketplace =
     & persons . at Vendor ?~ (mempty & at Marketplace ?~ Manages)
 
 main :: IO ()
-main =
-  putStrLn (containerContextDiagram' marketplace Marketplace)
+main = do
+  writeFile "marketplace-system-context.puml" (systemContextDiagram' marketplace)
+  writeFile "marketplace-container-context.puml" (containerContextDiagram' marketplace Marketplace)
