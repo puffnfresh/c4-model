@@ -124,4 +124,4 @@ marketplace =
 
 main :: IO ()
 main =
-  putStrLn (containerContextDiagram' marketplace)
+  putStrLn (containerContextDiagram' marketplace Marketplace)
