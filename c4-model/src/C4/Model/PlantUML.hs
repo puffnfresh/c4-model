@@ -42,13 +42,15 @@ ifoldToList f =
   ifoldMap (const . (: []) . f)
 
 wrapDiagram ::
-  IsString a =>
+  (IsString a, Semigroup a) =>
+  a ->
   [a] ->
   [a]
-wrapDiagram x =
-  [ "@startuml",
+wrapDiagram name x =
+  [ "@startuml " <> name,
     "!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml",
-    "LAYOUT_WITH_LEGEND()"
+    "LAYOUT_WITH_LEGEND()",
+    "title " <> name
   ]
     <> x
     <> ["@enduml"]
@@ -61,7 +63,7 @@ containerContextDiagram ::
   s ->
   [x]
 containerContextDiagram cx tx (Model _ ss) s =
-  wrapDiagram
+  wrapDiagram "Container context diagram"
     ( ifoldMap (\a b -> [container cx tx a b]) cs
         <> ifoldMap (relations cx tx) cs
     )
@@ -86,7 +88,7 @@ systemContextDiagram ::
   Model p i s c t o ->
   [x]
 systemContextDiagram px ix' sx tx (Model ps ss) =
-  wrapDiagram
+  wrapDiagram "System context diagram"
     ( ifoldToList (person . px) ps
         <> ifoldToList (system sx) ss
         <> ifoldMap (relations sx tx) ss

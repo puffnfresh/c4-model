@@ -5,9 +5,9 @@
 The c4-model library is used for generating system architecture
 diagrams:
 
-![](marketplace-system-context.png)
+![](System&#32;context&#32;diagram.png)
 
-![](marketplace-container-context.png)
+![](Container&#32;context&#32;diagram.png)
 
 ## Sequence Diagrams
 
