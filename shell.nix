@@ -3,5 +3,5 @@
     ps.c4-model
     ps.marketplace-examples
   ];
-  tools.cabal = "3.2.0.0";
+  tools.cabal = "3.4.0.0";
 }

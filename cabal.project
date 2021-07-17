@@ -2,8 +2,6 @@ packages:
   c4-model
   marketplace-examples
 
-index-state: 2020-08-02T00:00:00Z
-
 source-repository-package
   type: git
   location: https://github.com/sonyxperiadev/dataflow.git
