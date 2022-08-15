@@ -76,5 +76,9 @@
       url = "https://github.com/sonyxperiadev/dataflow.git";
       rev = "8bef5bd6bf96a918197e66ad9d675ff8cd2a4e33";
       sha256 = "04758mzq4vqb19m84ps6rz93d1ql3b4syhglzr963r79rfrszp4n";
-      });
+      }) // {
+      url = "https://github.com/sonyxperiadev/dataflow.git";
+      rev = "8bef5bd6bf96a918197e66ad9d675ff8cd2a4e33";
+      sha256 = "04758mzq4vqb19m84ps6rz93d1ql3b4syhglzr963r79rfrszp4n";
+      };
     }
